@@ -81,9 +81,9 @@ class GenerateModelCommand extends Command
             $config[$option[0]] = $value;
         }
 
-        $config['db_types'] = $this->appConfig->get('eloquent_model_generator.db_types');
+        $config['db_types'] = $this->appConfig->get('laravel_model_generator.db_types');
 
-        return new Config($config, $this->appConfig->get('eloquent_model_generator.model_defaults'));
+        return new Config($config, $this->appConfig->get('laravel_model_generator.model_defaults'));
     }
 
     /**

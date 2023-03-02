@@ -63,7 +63,7 @@ There are several useful options for defining several model's properties:
 
 ### Overriding default options globally
 
-Instead of spcifying options each time when executing the command you can create a config file named `eloquent_model_generator.php` at project's `config` directory with your own default values. Generator already contains its own config file at `Resources/config.php` with following options:
+Instead of spcifying options each time when executing the command you can create a config file named `laravel_model_generator.php` at project's `config` directory with your own default values. Generator already contains its own config file at `Resources/config.php` with following options:
 ```php
 <?php
 
@@ -77,7 +77,7 @@ return [
     'backup'          => null,
 ];
 ```
-You can override them by defining `model_defaults` array at `eloquent_model_generator.php`:
+You can override them by defining `model_defaults` array at `laravel_model_generator.php`:
 ```php
 <?php
 
@@ -101,7 +101,7 @@ Unknown database type <ANY_TYPE> requested, Doctrine\DBAL\Platforms\MySqlPlatfor
 ```
 it means that you must register your type `<ANY_TYPE>` with Doctrine.
 
-For instance, you are going to register `enum` type and want Doctrine to treat it as `string` (You can find all existing Doctrine's types [here](http://doctrine-orm.readthedocs.io/projects/doctrine-dbal/en/latest/reference/types.html#mapping-matrix)). Add next lines at your `config/eloquent_model_generator.php`:
+For instance, you are going to register `enum` type and want Doctrine to treat it as `string` (You can find all existing Doctrine's types [here](http://doctrine-orm.readthedocs.io/projects/doctrine-dbal/en/latest/reference/types.html#mapping-matrix)). Add next lines at your `config/laravel_model_generator.php`:
 ```
 return [
     // ...

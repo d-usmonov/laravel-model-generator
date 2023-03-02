@@ -19,7 +19,7 @@ use DUsmonov\LaravelModelGenerator\Processor\TableNameProcessor;
  */
 class GeneratorServiceProvider extends ServiceProvider
 {
-    const PROCESSOR_TAG = 'eloquent_model_generator.processor';
+    const PROCESSOR_TAG = 'laravel_model_generator.processor';
 
     /**
      * {@inheritDoc}
