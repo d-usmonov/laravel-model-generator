@@ -1,8 +1,14 @@
 {
     "name": "d-usmonov/laravel-model-generator",
     "description": "Laravel Eloquent Model Generator",
-    "version": "1.3.7",
+    "version": "1.0.0",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Doston Usmonov",
+            "email": "doston1533@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "DUsmonov\\LaravelModelGenerator\\": "src/"
@@ -20,5 +26,7 @@
                 "DUsmonov\\LaravelModelGenerator\\Provider\\GeneratorServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
