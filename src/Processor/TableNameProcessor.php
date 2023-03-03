@@ -2,58 +2,46 @@
 
 namespace DUsmonov\LaravelModelGenerator\Processor;
 
+use Illuminate\Database\DatabaseManager;
 use Krlove\CodeGenerator\Model\ClassNameModel;
 use Krlove\CodeGenerator\Model\DocBlockModel;
 use Krlove\CodeGenerator\Model\PropertyModel;
 use Krlove\CodeGenerator\Model\UseClassModel;
-use DUsmonov\LaravelModelGenerator\Config;
+use DUsmonov\LaravelModelGenerator\Config\Config;
+use DUsmonov\LaravelModelGenerator\Exception\GeneratorException;
 use DUsmonov\LaravelModelGenerator\Helper\EmgHelper;
+use DUsmonov\LaravelModelGenerator\Helper\Prefix;
 use DUsmonov\LaravelModelGenerator\Model\EloquentModel;
 
-/**
- * Class TableNameProcessor
- * @package DUsmonov\LaravelModelGenerator\Processor
- */
 class TableNameProcessor implements ProcessorInterface
 {
-    /**
-     * @var EmgHelper
-     */
-    protected $helper;
+    public function __construct(private DatabaseManager $databaseManager) {}
 
-    /**
-     * TableNameProcessor constructor.
-     * @param EmgHelper $helper
-     */
-    public function __construct(EmgHelper $helper)
+    public function process(EloquentModel $model, Config $config): void
     {
-        $this->helper = $helper;
-    }
+        $className = $config->getClassName();
+        $baseClassName = $config->getBaseClassName();
+        $tableName = $config->getTableName() ?: EmgHelper::getTableNameByClassName($className);
 
-    /**
-     * @inheritdoc
-     */
-    public function process(EloquentModel $model, Config $config)
-    {
-        $className     = $config->get('class_name');
-        $baseClassName = $config->get('base_class_name');
-        $tableName     = $config->get('table_name');
+        $schemaManager = $this->databaseManager->connection($config->getConnection())->getDoctrineSchemaManager();
+        $prefixedTableName = Prefix::add($tableName);
+        if (!$schemaManager->tablesExist($prefixedTableName)) {
+            throw new GeneratorException(sprintf('Table %s does not exist', $prefixedTableName));
+        }
 
-        $model->setName(new ClassNameModel($className, $this->helper->getShortClassName($baseClassName)));
-        $model->addUses(new UseClassModel(ltrim($baseClassName, '\\')));
-        $model->setTableName($tableName ?: $this->helper->getDefaultTableName($className));
+        $model
+            ->setName(new ClassNameModel($className, EmgHelper::getShortClassName($baseClassName)))
+            ->addUses(new UseClassModel(ltrim($baseClassName, '\\')))
+            ->setTableName($tableName);
 
-        if ($model->getTableName() !== $this->helper->getDefaultTableName($className)) {
+        if ($model->getTableName() !== EmgHelper::getTableNameByClassName($className)) {
             $property = new PropertyModel('table', 'protected', $model->getTableName());
             $property->setDocBlock(new DocBlockModel('The table associated with the model.', '', '@var string'));
             $model->addProperty($property);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 10;
     }

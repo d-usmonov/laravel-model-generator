@@ -3,27 +3,17 @@
 namespace DUsmonov\LaravelModelGenerator\Processor;
 
 use Krlove\CodeGenerator\Model\NamespaceModel;
-use DUsmonov\LaravelModelGenerator\Config;
+use DUsmonov\LaravelModelGenerator\Config\Config;
 use DUsmonov\LaravelModelGenerator\Model\EloquentModel;
 
-/**
- * Class NamespaceProcessor
- * @package DUsmonov\LaravelModelGenerator\Processor
- */
 class NamespaceProcessor implements ProcessorInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function process(EloquentModel $model, Config $config)
+    public function process(EloquentModel $model, Config $config): void
     {
-        $model->setNamespace(new NamespaceModel($config->get('namespace')));
+        $model->setNamespace(new NamespaceModel($config->getNamespace()));
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 6;
     }
