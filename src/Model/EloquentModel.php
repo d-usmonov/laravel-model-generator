@@ -112,7 +112,12 @@ class EloquentModel extends ClassModel
             );
         }
 
-        return sprintf('return $this->%s(%s);', $name, $this->createRelationMethodArguments($arguments));
+        $stringArguments = $this->createRelationMethodArguments($arguments);
+        $arrrayArguments = explode(',', $stringArguments);
+        $arrrayArguments[0] = '\\'.str_replace("'", "", $arrrayArguments[0]).'::class';
+        $stringArguments = implode(',', $arrrayArguments);
+
+        return sprintf('return $this->%s(%s);', $name, $stringArguments);
     }
 
     protected function createRelationMethodArguments(array $array): string
